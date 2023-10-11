@@ -1,16 +1,18 @@
 <script setup>
 import { useTodoListStore } from "../stores/todoListComposition";
 import { useRoute } from "vue-router";
-import { nextTick, onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 
 const store = useTodoListStore();
 const route = useRoute();
 const category = ref({});
-const newItem = ref("");
-const show = ref(false);
+const newItem = ref('');
+const showCarousel = ref(false);
 const categoryId = Number(route.params.categoryId);
 let itemsSubList = [];
-const selectedItem = ref("");
+const selectedItem = ref('');
+const selectedIndex = ref(null)
+const cellSize = 210
 
 onMounted(async () => {
   const result = await store.getTodo(categoryId);
@@ -25,20 +27,39 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 function rollDice() {
-  if (category.value.items?.length === 0) {
+  if (numberOfCategoryItems.value === 0) {
     return;
   }
 
-  if (selectedItem.value === "" || itemsSubList.length === 0) {
+  showCarousel.value = true
+
+  // if (selectedItem.value === "" || itemsSubList.length === 0) {
+  if (selectedIndex.value === null || itemsSubList.length === 0) {
     itemsSubList = [...category.value.items];
   }
   const randomArrayIndex = getRandomInt(itemsSubList.length) - 1;
-  show.value = false;
-  setTimeout(() => {
-    selectedItem.value = itemsSubList.splice(randomArrayIndex, 1)[0];
-    show.value = true;
-  }, 0);
+  // selectedItem.value = itemsSubList.splice(randomArrayIndex, 1)[0];
+  const poppedItem = itemsSubList.splice(randomArrayIndex, 1)[0];
+  // find in the original array
+  selectedIndex.value = category.value.items.findIndex(categoryItem => categoryItem === poppedItem)
 }
+
+const numberOfCategoryItems = computed(() => category.value.items?.length)
+
+const zTranslate = computed(() => {
+  return Math.round( ( cellSize / 2 ) /  Math.tan( Math.PI / numberOfCategoryItems.value ) );
+})
+
+function getRotateX(cellIndex) {
+  const rotateXValue = Math.round((360 / numberOfCategoryItems.value) * cellIndex)
+  return rotateXValue
+}
+
+const carouselStyle = computed(() => {
+  const rotateX = getRotateX(selectedIndex.value) + 1080 // 1080 is 3 revolutions
+  return `transform: translateZ(-${zTranslate.value}px) rotateX(-${rotateX}deg)`
+})
+
 </script>
 
 <template>
@@ -49,15 +70,23 @@ function rollDice() {
       <input v-model="newItem" type="text" />
       <button>+</button>
     </form>
-    <div id="randomContainer">
-      <button v-if="category.items?.length" @click="rollDice">
-        Roll Dice!
-      </button>
-      <Transition
-        ><h3 v-if="show">{{ selectedItem }}</h3></Transition
-      >
+    <button v-if="category.items?.length" @click="rollDice">
+      Roll Dice!
+    </button>
+    <div v-if="showCarousel" id="randomContainer">
+      <div id="random3DScene">
+        <div id="carousel" :style="carouselStyle">
+          <div
+            v-for="(carouselItem, index) in category.items"
+            :key="index" 
+            class="carousel-cell"
+            :style="{ transform: `rotateX(${getRotateX(index)}deg) translateZ(${zTranslate}px)`}">
+              {{ carouselItem }}
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="itemsContainer">
+    <div v-else id="itemsContainer">
       <div
         v-for="categoryItem in category.items"
         :key="categoryItem"
@@ -70,13 +99,8 @@ function rollDice() {
 </template>
 
 <style scoped>
+* { box-sizing: border-box; }
 form {
-  margin-bottom: 1rem;
-}
-#randomContainer {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
   margin-bottom: 1rem;
 }
 #itemsContainer {
@@ -87,14 +111,42 @@ form {
   padding-right: 3rem;
   line-height: 1.4;
 }
-.v-enter-active {
-  transition: opacity 2s ease;
-}
-
-.v-enter-from {
-  opacity: 0;
-}
 .item {
   border-bottom: black 1px solid;
+}
+
+#randomContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 140px;
+}
+
+#random3DScene {
+  width: 170px;
+  height: 140px;
+  position: relative;
+  perspective: 1000px;
+  margin: 40px auto;
+}
+
+#carousel {
+  width: 100%;
+  height: 100%;
+  position: relative; /* should this be absolute? */
+  transform-style: preserve-3d;
+  transition: transform 1s;
+}
+
+.carousel-cell {
+  position: absolute;
+  border: 2px solid black;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  background-color: grey;
+  font-size: 30px;
+  color: white
 }
 </style>
