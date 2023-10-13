@@ -14,10 +14,12 @@ const selectedIndex = ref(null)
 const cellSize = 140
 let lastRotateX = 0
 const showInputModal = ref(false)
+const inputPlaceholder = ref('')
 
 onMounted(async () => {
   const result = await store.getTodo(categoryId);
   category.value = result;
+  inputPlaceholder.value = `Something about "${category.value.item}"`
 });
 async function addItemAndClear() {
   await store.addCategoryItem(categoryId, newItem.value);
@@ -36,14 +38,15 @@ function rollDice() {
   }
 
   showCarousel.value = true
-
-  if (selectedIndex.value === null || itemsSubList.length === 0) {
-    itemsSubList = [...category.value.items];
-  }
-  const randomArrayIndex = getRandomInt(itemsSubList.length) - 1;
-  const poppedItem = itemsSubList.splice(randomArrayIndex, 1)[0];
-  // find in the original array
-  selectedIndex.value = category.value.items.findIndex(categoryItem => categoryItem === poppedItem)
+  setTimeout(() => {
+    if (selectedIndex.value === null || itemsSubList.length === 0) {
+      itemsSubList = [...category.value.items];
+    }
+    const randomArrayIndex = getRandomInt(itemsSubList.length) - 1;
+    const poppedItem = itemsSubList.splice(randomArrayIndex, 1)[0];
+    // find in the original array
+    selectedIndex.value = category.value.items.findIndex(categoryItem => categoryItem === poppedItem)
+  }, 0)
 }
 
 const numberOfCategoryItems = computed(() => category.value.items?.length)
@@ -84,7 +87,7 @@ const carouselStyle = computed(() => {
       @close="discardEdits"
       @cancel="discardEdits"
     >
-      <BFormInput v-model="newItem" id="kanduuItem" autofocus placeholder="Movies" />
+      <BFormInput v-model="newItem" id="kanduuItem" autofocus :placeholder="inputPlaceholder" />
     </BModal>
     <div class="row justify-content-center mt-4">
       <BButton class="w-25" variant="primary" v-if="category.items?.length" @click="rollDice">
@@ -154,5 +157,8 @@ i {
 #backgroundOverlay {
   background: black;
   opacity: 0.4;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>

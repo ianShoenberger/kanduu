@@ -10,6 +10,7 @@ const { addToDo } = store;
 const newKanduu = ref('')
 const editedKanduuId = ref(-1)
 const showInputModal = ref(false)
+const inputPlaceholder = ref(`Try "Movies"`)
 
 function discardEdits() {
   newKanduu.value = ''
@@ -52,7 +53,7 @@ async function editItem(kanduuId) {
       @close="discardEdits"
       @cancel="discardEdits"
     >
-      <BFormInput v-model="newKanduu" id="kanduuItem" autofocus placeholder="Movies" />
+      <BFormInput v-model="newKanduu" id="kanduuItem" autofocus :placeholder="inputPlaceholder" />
     </BModal>
   </div>
 </template>
