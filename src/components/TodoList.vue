@@ -1,11 +1,12 @@
 <script setup>
+import { defineEmits } from 'vue'
 import { useTodoListStore } from "../stores/todoListComposition";
-import { storeToRefs } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 
 const store = useTodoListStore();
 const { todoList } = storeToRefs(store);
-const { toggleCompleted, deleteToDo, getTodoList } = store;
+const { deleteToDo, getTodoList } = store;
 const router = useRouter();
 
 function openCategory(todoId) {
@@ -13,34 +14,31 @@ function openCategory(todoId) {
 }
 
 getTodoList();
+defineEmits(['editItem'])
 </script>
 
 <template>
-  <div v-for="todo in todoList" :key="todo.id" class="item">
-    <div class="content">
+  <div>
+    <div v-for="todo in todoList" :key="todo.id" class="row mb-2">
       <div
         @click="openCategory(todo.id)"
         :class="{ completed: todo.completed }"
-        class="todo-name"
+        class="todo-name col-8 d-flex justify-content-end"
       >
-        {{ todo.item }}
+        <button class="btn btn-secondary">{{ todo.item }}</button>
       </div>
-      <div @click.stop="toggleCompleted(todo.id)">&#10004;</div>
-      <div @click="deleteToDo(todo.id)" class="x">&#10060;</div>
+      <div class="col-2">
+        <button class="btn btn-info" @click="$emit('editItem', todo.id)"><i class="bi-pencil-square"></i></button>
+      </div>
+      <div class="col-2">
+        <button class="btn btn-danger" @click="deleteToDo(todo.id)"><i class="bi-x-square"></i></button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.completed {
-  text-decoration: line-through;
-}
-.content {
-  font-size: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+.x-squre {
+  font-size: 1rem;
 }
 </style>

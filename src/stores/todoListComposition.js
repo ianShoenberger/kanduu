@@ -43,6 +43,15 @@ export const useTodoListStore = defineStore("todoList", () => {
     const plainTodo = { ...todo };
     await indexedDb.saveTodo(plainTodo);
   }
+  async function editName(idToFind, newName) {
+    const todo = todoList.value.find((obj) => obj.id === idToFind);
+    if (todo) {
+      todo.item = newName;
+    }
+    // vue is adding other kinds of data to the object
+    const plainTodo = { ...todo };
+    await indexedDb.saveTodo(plainTodo);
+  }
   async function addCategoryItem(idToFind, newItem) {
     const todo = todoList.value.find((obj) => obj.id === idToFind);
     if (todo) {
@@ -66,6 +75,7 @@ export const useTodoListStore = defineStore("todoList", () => {
     addToDo,
     deleteToDo,
     toggleCompleted,
+    editName,
     addCategoryItem,
   };
 });

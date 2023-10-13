@@ -1,0 +1,5 @@
+- have same functionality at every level of kanduus
+- allow infinite(?) levels of nesting categories
+- make some kind of css event once a user has cycled through all of the random possibilities
+- have ability to select an item for duuing
+- log the time/date when selected

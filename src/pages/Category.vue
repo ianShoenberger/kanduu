@@ -10,9 +10,10 @@ const newItem = ref('');
 const showCarousel = ref(false);
 const categoryId = Number(route.params.categoryId);
 let itemsSubList = [];
-const selectedItem = ref('');
 const selectedIndex = ref(null)
-const cellSize = 210
+const cellSize = 140
+let lastRotateX = 0
+const showInputModal = ref(false)
 
 onMounted(async () => {
   const result = await store.getTodo(categoryId);
@@ -22,6 +23,9 @@ async function addItemAndClear() {
   await store.addCategoryItem(categoryId, newItem.value);
   itemsSubList.push(newItem.value);
   newItem.value = "";
+}
+function discardEdits() {
+  newItem.value = ''
 }
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -33,12 +37,10 @@ function rollDice() {
 
   showCarousel.value = true
 
-  // if (selectedItem.value === "" || itemsSubList.length === 0) {
   if (selectedIndex.value === null || itemsSubList.length === 0) {
     itemsSubList = [...category.value.items];
   }
   const randomArrayIndex = getRandomInt(itemsSubList.length) - 1;
-  // selectedItem.value = itemsSubList.splice(randomArrayIndex, 1)[0];
   const poppedItem = itemsSubList.splice(randomArrayIndex, 1)[0];
   // find in the original array
   selectedIndex.value = category.value.items.findIndex(categoryItem => categoryItem === poppedItem)
@@ -47,7 +49,8 @@ function rollDice() {
 const numberOfCategoryItems = computed(() => category.value.items?.length)
 
 const zTranslate = computed(() => {
-  return Math.round( ( cellSize / 2 ) /  Math.tan( Math.PI / numberOfCategoryItems.value ) );
+  const heightOfCell = cellSize + 20 // give some padding
+  return Math.round( ( heightOfCell / 2 ) /  Math.tan( Math.PI / numberOfCategoryItems.value ) );
 })
 
 function getRotateX(cellIndex) {
@@ -57,24 +60,40 @@ function getRotateX(cellIndex) {
 
 const carouselStyle = computed(() => {
   const rotateX = getRotateX(selectedIndex.value) + 1080 // 1080 is 3 revolutions
-  return `transform: translateZ(-${zTranslate.value}px) rotateX(-${rotateX}deg)`
+  const newRotateX = lastRotateX - rotateX
+  lastRotateX = newRotateX
+  return `transform: translateZ(-${zTranslate.value}px) rotateX(${newRotateX}deg)`
 })
 
 </script>
 
 <template>
-  <div>
-    <div class="title-text">Kanduu Items</div>
-    <h2>{{ category.item }}</h2>
-    <form @submit.prevent="addItemAndClear">
-      <input v-model="newItem" type="text" />
-      <button>+</button>
-    </form>
-    <button v-if="category.items?.length" @click="rollDice">
-      Roll Dice!
-    </button>
+  <div class="container pt-4">
+    <router-link to="/"><i class="bi-arrow-left-square"></i></router-link>
+    <div class="title-text text-center">Kanduu Items</div>
+    <h2 class="text-center">{{ category.item }}</h2>
+    <div class="row justify-content-center mt-4">
+      <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25"><i class="bi-plus-square"></i></BButton>
+    </div>
+    <BModal 
+      id="inputModal"
+      title="Edit"
+      hideFooter="false"
+      v-model="showInputModal"
+      @ok="addItemAndClear(newItem)"
+      @close="discardEdits"
+      @cancel="discardEdits"
+    >
+      <BFormInput v-model="newItem" id="kanduuItem" autofocus placeholder="Movies" />
+    </BModal>
+    <div class="row justify-content-center mt-4">
+      <BButton class="w-25" variant="primary" v-if="category.items?.length" @click="rollDice">
+        Roll Dice!
+      </BButton>
+    </div>
     <div v-if="showCarousel" id="randomContainer">
-      <div id="random3DScene">
+      <div id="backgroundOverlay" class="w-100 h-100" @click="showCarousel = false"></div>
+      <div id="random3DScene" @click="rollDice">
         <div id="carousel" :style="carouselStyle">
           <div
             v-for="(carouselItem, index) in category.items"
@@ -86,41 +105,23 @@ const carouselStyle = computed(() => {
         </div>
       </div>
     </div>
-    <div v-else id="itemsContainer">
-      <div
+    <BListGroup v-else id="itemsContainer" class="mt-4">
+      <BListGroupItem
         v-for="categoryItem in category.items"
         :key="categoryItem"
-        class="item"
+        class="item text-center"
       >
         {{ categoryItem }}
-      </div>
-    </div>
+      </BListGroupItem>
+    </BListGroup>
   </div>
 </template>
 
 <style scoped>
-* { box-sizing: border-box; }
-form {
-  margin-bottom: 1rem;
-}
-#itemsContainer {
-  display: flex;
-  flex-direction: column;
+i {
   font-size: 1.5rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
-  line-height: 1.4;
 }
-.item {
-  border-bottom: black 1px solid;
-}
-
-#randomContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 140px;
-}
+* { box-sizing: border-box; }
 
 #random3DScene {
   width: 170px;
@@ -135,7 +136,7 @@ form {
   height: 100%;
   position: relative; /* should this be absolute? */
   transform-style: preserve-3d;
-  transition: transform 1s;
+  transition: transform 2s cubic-bezier(.49,.88,.14,.94);
 }
 
 .carousel-cell {
@@ -145,8 +146,13 @@ form {
   text-align: center;
   width: 100%;
   height: 100%;
-  background-color: grey;
+  background-color: var(--bs-red);
   font-size: 30px;
   color: white
+}
+
+#backgroundOverlay {
+  background: black;
+  opacity: 0.4;
 }
 </style>
