@@ -14,6 +14,13 @@ class KanduuModel {
   }
 }
 
+function createPlainKanduu(kanduu) {
+  // vue is adding other kinds of data to the object
+  const plainKanduu = { ...kanduu };
+  plainKanduu.items = [...kanduu.items];
+  return plainKanduu;
+}
+
 export const useKanduuListStore = defineStore("kanduuList", () => {
   // state
   const kanduuList = ref([]);
@@ -50,8 +57,7 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     if (kanduu) {
       kanduu.completed = !kanduu.completed;
     }
-    // vue is adding other kinds of data to the object
-    const plainKanduu = { ...kanduu };
+    const plainKanduu = createPlainKanduu(kanduu);
     await indexedDb.saveKanduu(plainKanduu);
   }
   async function editName(idToFind, newName) {
@@ -59,16 +65,14 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     if (kanduu) {
       kanduu.name = newName;
     }
-    // vue is adding other kinds of data to the object
-    const plainKanduu = { ...kanduu };
+    const plainKanduu = createPlainKanduu(kanduu);
     await indexedDb.saveKanduu(plainKanduu);
   }
   async function addCategoryItem(idToFind, newItem) {
     const kanduu = kanduuList.value.find((obj) => obj.id === idToFind);
     if (kanduu) {
       const newCategoryItem = await addKanduu(newItem, idToFind);
-      // vue is adding other kinds of data to the object
-      const plainKanduu = { ...kanduu };
+      const plainKanduu = createPlainKanduu(kanduu);
       if (plainKanduu.items) {
         plainKanduu.items = [...plainKanduu.items, newCategoryItem.id];
         kanduu.items.push(newCategoryItem.id); // also save the new item on the 'ref'
