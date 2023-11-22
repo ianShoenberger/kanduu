@@ -43,16 +43,30 @@ async function openCategory(kanduuId) {
   pointer.value = kanduuId;
 }
 
+async function goBack() {
+  if (pointer.value === null) return
+  const kanduu = await store.getKanduu(pointer.value);
+  if (kanduu.parent !== null) {
+    const prevLevel = await store.getKanduu(kanduu.parent)
+    currentLevelName.value = prevLevel.name
+    pointer.value = prevLevel.id;
+  } else {
+    currentLevelName.value = ''
+    pointer.value = null
+  }
+}
+
 </script>
 
 <template>
   <div class="container pt-5">
+    <div v-show="pointer !== null" @click="goBack"><i class="bi-arrow-left-square"></i></div>
     <h1 class="title-text text-center">Kanduu</h1>
     <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
-    <kanduu-list class="mt-5" :pointer=pointer @edit-item="editItem" @open-category="openCategory"></kanduu-list>
     <div class="row justify-content-center mt-4">
       <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25"><i class="bi-plus-square"></i></BButton>
     </div>
+    <kanduu-list class="mt-5" :pointer=pointer @edit-item="editItem" @open-category="openCategory"></kanduu-list>
     <BModal 
       id="inputModal"
       title="Edit"
