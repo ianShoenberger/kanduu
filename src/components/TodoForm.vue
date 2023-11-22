@@ -1,23 +1,23 @@
 <script setup>
 import { ref } from "vue";
-import { useTodoListStore } from "../stores/todoListComposition";
+import { useKanduuListStore } from "../stores/kanduuListComposition";
 
-const todo = ref("");
-const store = useTodoListStore();
-const { addToDo } = store;
+const kanduu = ref("");
+const store = useKanduuListStore();
+const { addKanduu } = store;
 
 function addItemAndClear(item) {
   if (item.length === 0) {
     return;
   }
-  addToDo(item);
-  todo.value = "";
+  addKanduu(item);
+  kanduu.value = "";
 }
 </script>
 
 <template>
-  <form @submit.prevent="addItemAndClear(todo)">
-    <input v-model="todo" type="text" />
+  <form @submit.prevent="addItemAndClear(kanduu)">
+    <input v-model="kanduu" type="text" />
     <button>+</button>
   </form>
 </template>

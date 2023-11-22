@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 // import EditModal from "../components/EditModal.vue";
-import TodoList from "../components/TodoList.vue";
-import { useTodoListStore } from "../stores/todoListComposition";
+import KanduuList from "../components/KanduuList.vue";
+import { useKanduuListStore } from "../stores/kanduuListComposition";
 
-const store = useTodoListStore();
-const { addToDo } = store;
+const store = useKanduuListStore();
+const { addKanduu } = store;
 
 const newKanduu = ref('')
 const editedKanduuId = ref(-1)
@@ -23,14 +23,14 @@ function saveKanduu(item) {
     store.editName(editedKanduuId.value, item)
     editedKanduuId.value = -1
   } else {
-    addToDo(item);
+    addKanduu(item);
   }
   newKanduu.value = ''
 
 }
 async function editItem(kanduuId) {
-  const newToDo = await store.getTodo(kanduuId);
-  newKanduu.value = newToDo.item
+  const newKanduu = await store.getKanduu(kanduuId);
+  newKanduu.value = newKanduu.item
   editedKanduuId.value = kanduuId
   showInputModal.value = true
 }
@@ -40,7 +40,7 @@ async function editItem(kanduuId) {
 <template>
   <div class="container pt-5">
     <h1 class="title-text text-center">Kanduu</h1>
-    <todo-list class="mt-5" @edit-item="editItem"></todo-list>
+    <kanduu-list class="mt-5" @edit-item="editItem"></kanduu-list>
     <div class="row justify-content-center mt-4">
       <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25"><i class="bi-plus-square"></i></BButton>
     </div>

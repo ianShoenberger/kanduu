@@ -1,9 +1,9 @@
 <script setup>
-import { useTodoListStore } from "../stores/todoListComposition";
+import { useKanduuListStore } from "../stores/kanduuListComposition";
 import { useRoute } from "vue-router";
 import { onMounted, ref, computed } from "vue";
 
-const store = useTodoListStore();
+const store = useKanduuListStore();
 const route = useRoute();
 const category = ref({});
 const newItem = ref('');
@@ -17,9 +17,9 @@ const showInputModal = ref(false)
 const inputPlaceholder = ref('')
 
 onMounted(async () => {
-  const result = await store.getTodo(categoryId);
+  const result = await store.getKanduu(categoryId);
   category.value = result;
-  inputPlaceholder.value = `Something about "${category.value.item}"`
+  inputPlaceholder.value = `Something about "${category.value.name}"`
 });
 async function addItemAndClear() {
   await store.addCategoryItem(categoryId, newItem.value);
@@ -74,7 +74,7 @@ const carouselStyle = computed(() => {
   <div class="container pt-4">
     <router-link to="/"><i class="bi-arrow-left-square"></i></router-link>
     <div class="title-text text-center">Kanduu Items</div>
-    <h2 class="text-center">{{ category.item }}</h2>
+    <h2 class="text-center">{{ category.name }}</h2>
     <div class="row justify-content-center mt-4">
       <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25"><i class="bi-plus-square"></i></BButton>
     </div>

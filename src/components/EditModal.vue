@@ -1,6 +1,6 @@
 <script setup>
 
-import { defineEmits, ref } from 'vue'
+import { ref } from 'vue'
 const props = defineProps(['initialText', 'showModal'])
 const showInputModal = ref(false)
 const input = ref('')

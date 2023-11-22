@@ -1,12 +1,12 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import TodoApp from "../pages/TodoApp.vue";
+import KanduuApp from "../pages/KanduuApp.vue";
 import Category from "../pages/Category.vue";
 
 const routes = [
   {
     path: "/",
     name: "home",
-    component: TodoApp,
+    component: KanduuApp,
   },
   {
     path: "/category/:categoryId",

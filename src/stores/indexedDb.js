@@ -1,5 +1,8 @@
 export const useIndexedDb = () => {
   let _database = null;
+  const TRANSACTION_NAME = 'kanduus';
+  const OBJECT_STORE_NAME = 'kanduus';
+  const DB_NAME = 'kanduuDB'
 
   function getDatabase() {
     return new Promise((res, rej) => {
@@ -7,7 +10,7 @@ export const useIndexedDb = () => {
         res(_database);
       }
 
-      let request = window.indexedDB.open("todomvcDB", 1);
+      let request = window.indexedDB.open(DB_NAME, 1);
 
       request.onerror = (event) => {
         console.error("Error: Unable to open database", event);
@@ -21,7 +24,7 @@ export const useIndexedDb = () => {
 
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
-        db.createObjectStore("todos", {
+        db.createObjectStore(OBJECT_STORE_NAME, {
           autoIncrement: true,
           keyPath: "id",
         });
@@ -29,23 +32,23 @@ export const useIndexedDb = () => {
     });
   }
 
-  async function getTodoStore() {
+  async function getKanduuStore() {
     const database = await getDatabase();
     return new Promise((resolve, reject) => {
-      const transaction = database.transaction("todos", "readonly");
-      const store = transaction.objectStore("todos");
+      const transaction = database.transaction(TRANSACTION_NAME, "readonly");
+      const store = transaction.objectStore(OBJECT_STORE_NAME);
 
-      let todoList = [];
+      let kanduuList = [];
       store.openCursor().onsuccess = (event) => {
         const cursor = event.target.result;
         if (cursor) {
-          todoList.push(cursor.value);
+          kanduuList.push(cursor.value);
           cursor.continue();
         }
       };
 
       transaction.oncomplete = () => {
-        resolve(todoList);
+        resolve(kanduuList);
       };
 
       transaction.onerror = (event) => {
@@ -54,12 +57,12 @@ export const useIndexedDb = () => {
     });
   }
 
-  async function getTodo(todoId) {
+  async function getKanduu(kanduuId) {
     const database = await getDatabase();
     return new Promise((resolve, reject) => {
-      const transaction = database.transaction("todos", "readonly");
-      const store = transaction.objectStore("todos");
-      const objectStoreRequest = store.get(todoId);
+      const transaction = database.transaction(TRANSACTION_NAME, "readonly");
+      const store = transaction.objectStore(OBJECT_STORE_NAME);
+      const objectStoreRequest = store.get(kanduuId);
 
       objectStoreRequest.onsuccess = (event) => {
         resolve(event.target.result);
@@ -71,13 +74,13 @@ export const useIndexedDb = () => {
     });
   }
 
-  async function saveTodo(todo) {
+  async function saveKanduu(kanduu) {
     const database = await getDatabase();
     return new Promise((resolve, reject) => {
-      const transaction = database.transaction("todos", "readwrite");
-      const store = transaction.objectStore("todos");
+      const transaction = database.transaction(TRANSACTION_NAME, "readwrite");
+      const store = transaction.objectStore(OBJECT_STORE_NAME);
 
-      store.put(todo);
+      store.put(kanduu);
 
       transaction.oncomplete = () => {
         resolve("item successfully saved.");
@@ -89,13 +92,13 @@ export const useIndexedDb = () => {
     });
   }
 
-  async function deleteTodo(todoId) {
+  async function deleteKanduu(kanduuId) {
     const database = await getDatabase();
     return new Promise((resolve, reject) => {
-      const transaction = database.transaction("todos", "readwrite");
-      const store = transaction.objectStore("todos");
+      const transaction = database.transaction(TRANSACTION_NAME, "readwrite");
+      const store = transaction.objectStore(OBJECT_STORE_NAME);
 
-      store.delete(todoId);
+      store.delete(kanduuId);
 
       transaction.oncomplete = () => {
         resolve("item successfully deleted.");
@@ -107,5 +110,5 @@ export const useIndexedDb = () => {
     });
   }
 
-  return { getTodoStore, getTodo, saveTodo, deleteTodo };
+  return { getKanduuStore, getKanduu, saveKanduu, deleteKanduu };
 };

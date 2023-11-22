@@ -3,3 +3,8 @@
 - make some kind of css event once a user has cycled through all of the random possibilities
 - have ability to select an item for duuing
 - log the time/date when selected
+
+db schema:
+{id: 1, name: 'movies', completed: false, items: [2, 5, 6, 7], parent: null}
+
+
