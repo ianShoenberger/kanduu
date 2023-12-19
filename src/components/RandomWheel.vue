@@ -46,6 +46,7 @@ function rollDice() {
     const poppedItem = itemsSubList.splice(randomArrayIndex, 1)[0];
     // find in the original array
     selectedIndex.value = displayedList.value.findIndex(categoryItem => categoryItem.id === poppedItem.id)
+    console.log(`should be looking at ${displayedList.value[selectedIndex.value].name}`)
   }, 0)
 }
 
@@ -59,11 +60,15 @@ function getRotateX(cellIndex) {
   return rotateXValue
 }
 
+// TODO this isn't spinning to the correct item
 const carouselStyle = computed(() => {
   const rotateX = getRotateX(selectedIndex.value) + 1080 // 1080 is 3 revolutions
   const newRotateX = lastRotateX - rotateX
-  lastRotateX = newRotateX
-  return `transform: translateZ(-${zTranslate.value}px) rotateX(${newRotateX}deg)`
+  if (!isNaN(newRotateX)) {
+    lastRotateX = newRotateX
+    return `transform: translateZ(-${zTranslate.value}px) rotateX(${newRotateX}deg)`
+  }
+  return 'transform: translateZ(-0px) rotateX(0deg)'
 })
 </script>
 
