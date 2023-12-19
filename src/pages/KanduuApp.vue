@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 // import EditModal from "../components/EditModal.vue";
 import KanduuList from "../components/KanduuList.vue";
+import RandomWheel from "../components/RandomWheel.vue";
 import { useKanduuListStore } from "../stores/kanduuListComposition";
 
 const store = useKanduuListStore();
@@ -13,6 +14,7 @@ const showInputModal = ref(false)
 const inputPlaceholder = ref(`Try "Movies"`)
 const pointer = ref(null)
 const currentLevelName = ref('')
+const showCarousel = ref(false)
 
 function discardEdits() {
   newKanduu.value = ''
@@ -39,8 +41,9 @@ async function editItem(kanduuId) {
 
 async function openCategory(kanduuId) {
   const kanduu = await store.getKanduu(kanduuId);
-  currentLevelName.value = kanduu.name
+  currentLevelName.value = kanduu.name;
   pointer.value = kanduuId;
+  inputPlaceholder.value = `Something about "${kanduu.name}"`;
 }
 
 async function goBack() {
@@ -56,6 +59,10 @@ async function goBack() {
   }
 }
 
+function rollDice() {
+  showCarousel.value = true
+}
+
 </script>
 
 <template>
@@ -65,8 +72,12 @@ async function goBack() {
     <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
     <div class="row justify-content-center mt-4">
       <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25"><i class="bi-plus-square"></i></BButton>
+      <BButton class="w-25" variant="primary" @click="rollDice">
+        <i class="bi-dice-5"></i>
+      </BButton>
     </div>
-    <kanduu-list class="mt-5" :pointer=pointer @edit-item="editItem" @open-category="openCategory"></kanduu-list>
+    <random-wheel v-if="showCarousel" :pointer=pointer></random-wheel>
+    <kanduu-list v-else class="mt-5" :pointer=pointer @edit-item="editItem" @open-category="openCategory"></kanduu-list>
     <BModal 
       id="inputModal"
       title="Edit"

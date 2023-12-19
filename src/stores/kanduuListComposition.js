@@ -41,6 +41,12 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     const kanduu = kanduuList.value.find((kanduu) => kanduu.id === kanduuId);
     return kanduu;
   }
+
+  async function getKanduuChildren(parentKanduuId) {
+    await getKanduuList();
+    const children = kanduuList.value.filter((kanduu) => kanduu.parent === parentKanduuId)
+    return children;
+  }
   // actions
   async function addKanduu(name, parent = null) {
     const newKanduu = new KanduuModel(id.value++, name, parent);
@@ -87,6 +93,7 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     kanduuList,
     getKanduuList,
     getKanduu,
+    getKanduuChildren,
     id,
     addKanduu,
     deleteKanduu,
