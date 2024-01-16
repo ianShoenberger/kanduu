@@ -67,16 +67,20 @@ function rollDice() {
 
 <template>
   <div class="container pt-5">
-    <div v-show="pointer !== null" @click="goBack"><i class="bi-arrow-left-square"></i></div>
+    <div v-show="pointer !== null">
+      <BButton @click="goBack">
+        <i class="bi-arrow-left-square"></i>
+      </BButton>
+    </div>
     <h1 class="title-text text-center">Kanduu</h1>
     <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
     <div class="row justify-content-center mt-4">
-      <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25"><i class="bi-plus-square"></i></BButton>
+      <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25 me-2"><i class="bi-plus-square"></i></BButton>
       <BButton class="w-25" variant="primary" @click="rollDice">
         <i class="bi-dice-5"></i>
       </BButton>
     </div>
-    <random-wheel v-if="showCarousel" :pointer=pointer></random-wheel>
+    <random-wheel v-if="showCarousel" :pointer=pointer @close="showCarousel=false"></random-wheel>
     <kanduu-list v-else class="mt-5" :pointer=pointer @edit-item="editItem" @open-category="openCategory"></kanduu-list>
     <BModal 
       id="inputModal"

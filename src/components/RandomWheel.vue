@@ -4,11 +4,11 @@ import { useKanduuListStore } from "../stores/kanduuListComposition";
 import { storeToRefs } from "pinia";
 
 const props = defineProps(['pointer'])
-const showCarousel = ref(false)
 const store = useKanduuListStore();
 // const { kanduuList } = storeToRefs(store);
 const { getKanduuList, getKanduuChildren } = store;
 const displayedList = ref([]);
+const emit = defineEmits(['close']);
 
 // getKanduuList();
 
@@ -26,6 +26,11 @@ let lastRotateX = 0;
 
 onMounted(async () => {
   displayedList.value = await getKanduuChildren(props.pointer);
+  if (!numberOfCategoryItems.value) {
+    emit('close')
+  } else {
+    rollDice();
+  }
 })
 
 /** dice random stuff */
@@ -41,12 +46,12 @@ function rollDice() {
     if (selectedIndex.value === null || itemsSubList.length === 0) {
       itemsSubList = [...displayedList.value];
     }
-    const randomArrayIndex = getRandomInt(itemsSubList.length) - 1;
+    const randomArrayIndex = getRandomInt(itemsSubList.length);
     console.log(randomArrayIndex);
     const poppedItem = itemsSubList.splice(randomArrayIndex, 1)[0];
     // find in the original array
     selectedIndex.value = displayedList.value.findIndex(categoryItem => categoryItem.id === poppedItem.id)
-    console.log(`should be looking at ${displayedList.value[selectedIndex.value].name}`)
+    console.log(`should be looking at ${selectedIndex.value} - ${displayedList.value[selectedIndex.value].name}`)
   }, 0)
 }
 
@@ -56,25 +61,27 @@ const zTranslate = computed(() => {
 })
 
 function getRotateX(cellIndex) {
+  if (!numberOfCategoryItems.value) {
+    return 0;
+  }
   const rotateXValue = Math.round((360 / numberOfCategoryItems.value) * cellIndex)
   return rotateXValue
 }
 
-// TODO this isn't spinning to the correct item
 const carouselStyle = computed(() => {
-  const rotateX = getRotateX(selectedIndex.value) + 1080 // 1080 is 3 revolutions
-  const newRotateX = lastRotateX - rotateX
-  if (!isNaN(newRotateX)) {
-    lastRotateX = newRotateX
-    return `transform: translateZ(-${zTranslate.value}px) rotateX(${newRotateX}deg)`
+  if(selectedIndex.value === null) {
+    return 'transform: translateZ(-0px) rotateX(0deg)'
   }
-  return 'transform: translateZ(-0px) rotateX(0deg)'
+  const rotateX = getRotateX(selectedIndex.value) // + 1080 // 1080 is 3 revolutions
+  const newRotateX = lastRotateX - rotateX
+  lastRotateX = newRotateX
+  return `transform: translateZ(-${zTranslate.value}px) rotateX(-${rotateX}deg)`
 })
 </script>
 
 <template>
   <div id="randomContainer">
-    <div id="backgroundOverlay" class="w-100 h-100" @click="showCarousel = false"></div>
+    <div id="backgroundOverlay" class="w-100 h-100" @click="$emit('close')"></div>
     <div id="random3DScene" @click="rollDice">
       <div id="carousel" :style="carouselStyle">
         <div
