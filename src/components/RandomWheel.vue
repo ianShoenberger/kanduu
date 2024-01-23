@@ -22,7 +22,7 @@ const numberOfCategoryItems = computed(() => {
 const selectedIndex = ref(null);
 let itemsSubList = [];
 const cellSize = 140;
-let lastRotateX = 0;
+let numOfSpins = 1;
 
 onMounted(async () => {
   displayedList.value = await getKanduuChildren(props.pointer);
@@ -72,9 +72,9 @@ const carouselStyle = computed(() => {
   if(selectedIndex.value === null) {
     return 'transform: translateZ(-0px) rotateX(0deg)'
   }
-  const rotateX = getRotateX(selectedIndex.value) // + 1080 // 1080 is 3 revolutions
-  const newRotateX = lastRotateX - rotateX
-  lastRotateX = newRotateX
+  let rotateX = getRotateX(selectedIndex.value)
+  rotateX += 1080 * numOfSpins
+  numOfSpins += 1;
   return `transform: translateZ(-${zTranslate.value}px) rotateX(-${rotateX}deg)`
 })
 </script>
