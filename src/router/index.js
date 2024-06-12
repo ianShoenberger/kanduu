@@ -9,7 +9,7 @@ const routes = [
     component: KanduuApp,
   },
   {
-    path: "/category/:categoryId",
+    path: "/category/:categoryId", // FYI this is not being used right now
     name: "category",
     component: Category,
   },

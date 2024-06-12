@@ -11,7 +11,8 @@ const { addKanduu } = store;
 const newKanduu = ref('')
 const editedKanduuId = ref(-1)
 const showInputModal = ref(false)
-const inputPlaceholder = ref(`Try "Movies"`)
+const originalPlaceholderText = `Try "Movies"`
+const inputPlaceholder = ref(originalPlaceholderText)
 const pointer = ref(null)
 const currentLevelName = ref('')
 const showCarousel = ref(false)
@@ -56,6 +57,7 @@ async function goBack() {
   } else {
     currentLevelName.value = ''
     pointer.value = null
+    inputPlaceholder.value = originalPlaceholderText
   }
 }
 

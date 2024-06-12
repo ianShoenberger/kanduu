@@ -18,27 +18,35 @@ const displayedList = computed(() => {
 
 <template>
   <div>
-    <div v-for="kanduu in displayedList" :key="kanduu.id" class="row mb-2">
-      <div
-        :class="{ completed: kanduu.completed }"
-        class="kanduu-name col-8 d-flex justify-content-end"
-      >
-        <button class="btn btn-secondary" @click="$emit('editItem', kanduu.id)">
-          <span>{{ kanduu.name }}</span><i class="ms-3 bi-pencil-square"></i>
-        </button>
+    <TransitionGroup name="list">
+      <div v-for="kanduu in displayedList" :key="kanduu.id" class="row mb-2">
+        <div
+          :class="{ completed: kanduu.completed }"
+          class="kanduu-name col-8 d-flex justify-content-end"
+        >
+          <button class="btn btn-secondary" @click="$emit('openCategory', kanduu.id)">
+            <span>{{ kanduu.name }}</span>
+          </button>
+        </div>
+        <div class="col-2">
+          <button class="btn btn-info" @click="$emit('editItem', kanduu.id)"><i class="bi-pencil-square"></i></button>
+        </div>
+        <div class="col-2">
+          <button class="btn btn-danger" @click="deleteKanduu(kanduu.id)"><i class="bi-x-square"></i></button>
+        </div>
       </div>
-      <div class="col-2">
-        <button class="btn btn-info" @click="$emit('openCategory', kanduu.id)"><i class="bi-clipboard2-plus"></i></button>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-danger" @click="deleteKanduu(kanduu.id)"><i class="bi-x-square"></i></button>
-      </div>
-    </div>
+    </TransitionGroup>
   </div>
 </template>
 
 <style scoped>
-.x-squre {
-  font-size: 1rem;
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 </style>
