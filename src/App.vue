@@ -14,8 +14,9 @@
   /* padding-top: 4rem; */
 }
 .title-text {
-  color: #00ccff;
-  text-shadow: 2px 2px 0 #103e4b;
+  /* color: #00ccff; */
+  color: #d10606;
+  text-shadow: 2px 2px 1px #103e4b;
   font-size: 3rem;
 }
 </style>

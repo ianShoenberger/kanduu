@@ -1,6 +1,16 @@
+fix bug for choosing empty category
+- what about hamburger menu for each item?
+    actions are: select for duuing, edit, delete, graph?
+    metadata is: date last selected, number of child items?
 - make some kind of css event once a user has cycled through all of the random possibilities
-- have ability to select an item for duuing
-- log the time/date when selected
+- colors!!!
+- maintain title and other element positioning/spacing when navigating from home to category screens
+- have ability to select an item for duuing (arrow pointed to random element)
+    once selected, show checkmark or some animation, then modal for 'keep' or 'remove' and with a 'dont ask again' checkbox
+    log the time/date when selected
+
+- graph for selected items
+- set schedule or recurring tasks?
 
 db schema:
 {id: 1, name: 'movies', completed: false, items: [2, 5, 6, 7], parent: null}
