@@ -1,6 +1,5 @@
-fix bug for choosing empty category
 - what about hamburger menu for each item?
-    actions are: select for duuing, edit, delete, graph?
+    actions are: select for duuing, edit, delete, graph? move?
     metadata is: date last selected, number of child items?
 - make some kind of css event once a user has cycled through all of the random possibilities
 - colors!!!
@@ -15,4 +14,10 @@ fix bug for choosing empty category
 db schema:
 {id: 1, name: 'movies', completed: false, items: [2, 5, 6, 7], parent: null}
 
-
+toucan colors:
+orange: ff7300
+blue: 02b6c7
+green: 81ca01
+red: cb0328
+yellow: f2e213
+black, some white

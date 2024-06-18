@@ -11,6 +11,8 @@ class KanduuModel {
     this.completed = false
     this.items = []
     this.parent = parent
+    this.dateCreated = Date.now()
+    this.dateModified = Date.now()
   }
 }
 
