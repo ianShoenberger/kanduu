@@ -71,7 +71,7 @@ function onAfterListLeave () {
 .list-leave-active {
   transition: all 0.4s linear;
 }
-/* .list-enter-from, */
+.list-enter-from,
 .list-leave-to {
   opacity: 0;
 }
