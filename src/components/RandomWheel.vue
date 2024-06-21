@@ -77,6 +77,17 @@ const carouselStyle = computed(() => {
   numOfSpins += 1;
   return `transform: translateZ(-${zTranslate.value}px) rotateX(-${rotateX}deg)`
 })
+
+function getBackgroundColor(index) {
+  let colorIndex = index % 5
+  // most of the time we can just use the % 5, but in the situation where
+  // the number of elements is divisible by 6 and the current index is the 'end'
+  // of the list, we would show a repeating color. So we need to offset that.
+  if (displayedList.value.length % 6 === 0 && index === displayedList.value.length - 1) {
+    colorIndex += 1
+  }
+  return `wheel-background-${colorIndex}`
+}
 </script>
 
 <template>
@@ -88,6 +99,7 @@ const carouselStyle = computed(() => {
           v-for="(carouselItem, index) in displayedList"
           :key="index" 
           class="carousel-cell"
+          :class="getBackgroundColor(index)"
           :style="{ transform: `rotateX(${getRotateX(index)}deg) translateZ(${zTranslate}px)`}">
             {{ carouselItem.name }}
         </div>
@@ -120,9 +132,23 @@ const carouselStyle = computed(() => {
   text-align: center;
   width: 100%;
   height: 100%;
-  background-color: var(--bs-red);
   font-size: 30px;
   color: white
+}
+.wheel-background-0 {
+  background: var(--red-color)
+}
+.wheel-background-1 {
+  background: var(--orange-color)
+}
+.wheel-background-2 {
+  background: var(--yellow-color)
+}
+.wheel-background-3 {
+  background: var(--green-color)
+}
+.wheel-background-4 {
+  background: var(--blue-color)
 }
 #backgroundOverlay {
   background: black;

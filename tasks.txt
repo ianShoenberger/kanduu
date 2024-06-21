@@ -2,7 +2,6 @@
     actions are: select for duuing, edit, delete, graph? move?
     metadata is: date last selected, number of child items?
 - make some kind of css event once a user has cycled through all of the random possibilities
-- colors!!!
 - maintain title and other element positioning/spacing when navigating from home to category screens
 - have ability to select an item for duuing (arrow pointed to random element)
     once selected, show checkmark or some animation, then modal for 'keep' or 'remove' and with a 'dont ask again' checkbox
@@ -10,6 +9,7 @@
 
 - graph for selected items
 - set schedule or recurring tasks?
+- don't transition list after closing the random wheel
 
 db schema:
 {id: 1, name: 'movies', completed: false, items: [2, 5, 6, 7], parent: null}

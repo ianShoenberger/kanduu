@@ -65,16 +65,17 @@ function onAfterListLeave () {
 
 <style scoped>
 .list-enter-active {
-  transition: all 0.3s ease;
+  transition: all 0.2s ease-in;
+  transition-delay: 0.2s;
 }
 .list-leave-active {
-  transition: all 0.6s ease;
+  transition: all 0.4s linear;
 }
-.list-enter-from,
+/* .list-enter-from, */
 .list-leave-to {
   opacity: 0;
 }
 .list-enter-from {
-  transform: translateX(30px);
+  transform: translateX(200px);
 }
 </style>
