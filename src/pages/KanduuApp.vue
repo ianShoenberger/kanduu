@@ -6,11 +6,14 @@ import RandomWheel from "../components/RandomWheel.vue";
 import { useKanduuListStore } from "../stores/kanduuListComposition";
 
 const store = useKanduuListStore();
-const { addKanduu } = store;
+const { addKanduu, duuKanduu, getKanduu } = store;
 
 const newKanduu = ref('')
 const editedKanduuId = ref(-1)
 const showInputModal = ref(false)
+const duKanduuId = ref(-1)
+const showDuuPrompt = ref(false)
+const duuPromptTitle = ref('')
 const originalPlaceholderText = `Try "Movies"`
 const inputPlaceholder = ref(originalPlaceholderText)
 const pointer = ref(null)
@@ -34,14 +37,14 @@ function saveKanduu(item) {
 
 }
 async function editItem(kanduuId) {
-  const kanduu = await store.getKanduu(kanduuId);
+  const kanduu = await getKanduu(kanduuId);
   newKanduu.value = kanduu.name
   editedKanduuId.value = kanduuId
   showInputModal.value = true
 }
 
 async function openCategory(kanduuId) {
-  const kanduu = await store.getKanduu(kanduuId);
+  const kanduu = await getKanduu(kanduuId);
   currentLevelName.value = kanduu.name;
   pointer.value = kanduuId;
   inputPlaceholder.value = `Something about "${kanduu.name}"`;
@@ -49,9 +52,9 @@ async function openCategory(kanduuId) {
 
 async function goBack() {
   if (pointer.value === null) return
-  const kanduu = await store.getKanduu(pointer.value);
+  const kanduu = await getKanduu(pointer.value);
   if (kanduu.parent !== null) {
-    const prevLevel = await store.getKanduu(kanduu.parent)
+    const prevLevel = await getKanduu(kanduu.parent)
     currentLevelName.value = prevLevel.name
     pointer.value = prevLevel.id;
   } else {
@@ -63,6 +66,29 @@ async function goBack() {
 
 function rollDice() {
   showCarousel.value = true
+}
+
+async function duuItem(itemId) {
+  await duuKanduu(itemId) // async
+  duKanduuId.value = itemId
+  duuPromptTitle.value = await getDuuPromptTitle(itemId)
+  showDuuPrompt.value = true
+  showCarousel.value = false
+}
+
+function removeItem() {
+  // call store function to set item.show to false
+  hideDuuPrompt()
+}
+function hideDuuPrompt() {
+  showDuuPrompt.value = false
+  duKanduuId.value = -1
+  duuPromptTitle.value = ''
+}
+
+async function getDuuPromptTitle(kanduuId) {
+  const kanduuItem = await getKanduu(kanduuId)
+  return `What would you like to duu with ${kanduuItem.name}?`
 }
 
 </script>
@@ -82,7 +108,7 @@ function rollDice() {
         <i class="bi-dice-5"></i>
       </BButton>
     </div>
-    <random-wheel v-if="showCarousel" :pointer=pointer @close="showCarousel=false"></random-wheel>
+    <random-wheel v-if="showCarousel" :pointer=pointer @close="showCarousel=false" @duu="duuItem"></random-wheel>
     <kanduu-list v-else class="mt-5" :pointer=pointer @edit-item="editItem" @open-category="openCategory"></kanduu-list>
     <BModal 
       id="inputModal"
@@ -94,6 +120,31 @@ function rollDice() {
       @cancel="discardEdits"
     >
       <BFormInput v-model="newKanduu" id="kanduuItem" autofocus :placeholder="inputPlaceholder" />
+    </BModal>
+    <BModal 
+      id="duuModal"
+      title="Nice!"
+      hideFooter="true"
+      v-model="showDuuPrompt"
+    >
+      <h5 class="mb-5">{{ duuPromptTitle }}</h5>
+      <div class="w-100 d-flex justify-content-end">
+        <b-button
+          variant="secondary"
+          size="md"
+          @click="hideDuuPrompt"
+        >
+          Keep 
+        </b-button>
+        <b-button
+          variant="danger"
+          size="md"
+          class="ms-2"
+          @click="removeItem"
+        >
+          Discard
+        </b-button>
+      </div>
     </BModal>
   </div>
 </template>

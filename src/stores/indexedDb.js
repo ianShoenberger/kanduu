@@ -10,7 +10,7 @@ export const useIndexedDb = () => {
         res(_database);
       }
 
-      let request = window.indexedDB.open(DB_NAME, 1);
+      let request = window.indexedDB.open(DB_NAME, 2);
 
       request.onerror = (event) => {
         console.error("Error: Unable to open database", event);

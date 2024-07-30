@@ -5,7 +5,7 @@ import { useIndexedDb } from "./indexedDb";
 const indexedDb = useIndexedDb();
 
 class KanduuModel {  
-  constructor(newId, name, parent) {
+  constructor(newId, name, parent, isLeaf = false) {
     this.id = newId
     this.name = name
     this.completed = false
@@ -13,6 +13,9 @@ class KanduuModel {
     this.parent = parent
     this.dateCreated = Date.now()
     this.dateModified = Date.now()
+    this.datesDone = []
+    this.show = true
+    this.isLeaf = isLeaf
   }
 }
 
@@ -20,6 +23,7 @@ function createPlainKanduu(kanduu) {
   // vue is adding other kinds of data to the object
   const plainKanduu = { ...kanduu };
   plainKanduu.items = [...kanduu.items];
+  plainKanduu.datesDone = [...kanduu.datesDone]
   return plainKanduu;
 }
 
@@ -68,6 +72,14 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     const plainKanduu = createPlainKanduu(kanduu);
     await indexedDb.saveKanduu(plainKanduu);
   }
+  async function duuKanduu(itemId) {
+    const kanduu = kanduuList.value.find((obj) => obj.id === itemId);
+    if (kanduu) {
+      kanduu.datesDone.push(Date.now());
+    }
+    const plainKanduu = createPlainKanduu(kanduu);
+    await indexedDb.saveKanduu(plainKanduu);
+  }
   async function editName(idToFind, newName) {
     const kanduu = kanduuList.value.find((obj) => obj.id === idToFind);
     if (kanduu) {
@@ -100,6 +112,7 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     addKanduu,
     deleteKanduu,
     toggleCompleted,
+    duuKanduu,
     editName,
     addCategoryItem,
   };

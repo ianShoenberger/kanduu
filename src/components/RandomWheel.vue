@@ -8,7 +8,7 @@ const store = useKanduuListStore();
 // const { kanduuList } = storeToRefs(store);
 const { getKanduuList, getKanduuChildren } = store;
 const displayedList = ref([]);
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'duu']);
 
 // getKanduuList();
 
@@ -20,6 +20,7 @@ const numberOfCategoryItems = computed(() => {
 })
 
 const selectedIndex = ref(null);
+const isButtonDisabled = ref(false)
 let itemsSubList = [];
 const cellSize = 140;
 let numOfSpins = 1;
@@ -51,7 +52,8 @@ function rollDice() {
     const poppedItem = itemsSubList.splice(randomArrayIndex, 1)[0];
     // find in the original array
     selectedIndex.value = displayedList.value.findIndex(categoryItem => categoryItem.id === poppedItem.id)
-    console.log(`should be looking at ${selectedIndex.value} - ${displayedList.value[selectedIndex.value].name}`)
+    // console.log(`should be looking at ${selectedIndex.value} - ${displayedList.value[selectedIndex.value].name}`)
+    isButtonDisabled.value = true
   }, 0)
 }
 
@@ -88,13 +90,20 @@ function getBackgroundColor(index) {
   }
   return `wheel-background-${colorIndex}`
 }
+
+function doneRolling() {
+  isButtonDisabled.value = false
+}
+function duu() {
+  emit('duu', displayedList.value[selectedIndex.value].id)
+}
 </script>
 
 <template>
   <div id="randomContainer">
     <div id="backgroundOverlay" class="w-100 h-100" @click="$emit('close')"></div>
     <div id="random3DScene" @click="rollDice">
-      <div id="carousel" :style="carouselStyle">
+      <div id="carousel" :style="carouselStyle" @transitionend="doneRolling">
         <div
           v-for="(carouselItem, index) in displayedList"
           :key="index" 
@@ -104,6 +113,11 @@ function getBackgroundColor(index) {
             {{ carouselItem.name }}
         </div>
       </div>
+    </div>
+    <div id="duuButtonContainer" class="d-flex justify-content-center w-100">
+      <BButton id="duuButton" :disabled="isButtonDisabled" size="lg" variant="primary" @click="duu">
+        <span>duu this!</span>
+      </BButton>
     </div>
   </div>
 </template>
@@ -156,5 +170,10 @@ function getBackgroundColor(index) {
   position: absolute;
   top: 0;
   left: 0;
+}
+#duuButtonContainer {
+  position: absolute;
+  bottom: 200px;
+  margin-left: calc(var(--bs-gutter-x) * -0.5)
 }
 </style>
