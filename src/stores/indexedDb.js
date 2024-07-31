@@ -23,7 +23,12 @@ export const useIndexedDb = () => {
       };
 
       request.onupgradeneeded = (event) => {
+        console.log(`old db version found: ${event.oldVersion}`)
         const db = event.target.result;
+        // we could be more strategic based off the version we are
+        // upgrading from but for now... just delete everything and start new
+        // ... could migrate data from an object store for instance...
+        db.deleteObjectStore(OBJECT_STORE_NAME);
         db.createObjectStore(OBJECT_STORE_NAME, {
           autoIncrement: true,
           keyPath: "id",
