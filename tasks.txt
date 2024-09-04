@@ -12,9 +12,6 @@
 - don't transition list after closing the random wheel
 - add radio buttons "category or item" in the add/edit modal
 
-db schema:
-{id: 1, name: 'movies', completed: false, items: [2, 5, 6, 7], parent: null}
-
 toucan colors:
 orange: ff7300
 blue: 02b6c7

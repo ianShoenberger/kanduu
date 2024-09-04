@@ -1,8 +1,33 @@
-<script setup></script>
+<script setup>
+import { watchEffect, useTemplateRef, onMounted } from 'vue'
+
+const { showRefreshPrompt, refreshCallback } = defineProps(['showRefreshPrompt', 'refreshCallback'])
+const modal = useTemplateRef('refreshModal')
+
+onMounted(() => {
+  watchEffect(() => {
+    if (showRefreshPrompt) {
+      modal.value.show()
+    } else {
+      modal.value.hide()
+    }
+  })
+})
+
+</script>
 
 <template>
   <div id="myApp">
     <router-view></router-view>
+    <BModal
+      ref="refreshModal"
+      id="refreshModal"
+      title="App Update"
+      ok-title="Reload"
+      hideFooter="false"
+      @ok="refreshCallback"
+    > New version available, click reload button to update.
+    </BModal>
   </div>
 </template>
 

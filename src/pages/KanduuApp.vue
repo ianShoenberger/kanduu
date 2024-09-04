@@ -95,18 +95,20 @@ async function getDuuPromptTitle(kanduuId) {
 
 <template>
   <div class="container pt-5">
-    <div v-show="pointer !== null">
-      <BButton @click="goBack">
-        <i class="bi-arrow-left-square"></i>
-      </BButton>
-    </div>
-    <h1 class="title-text text-center">Kanduu</h1>
-    <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
-    <div class="row justify-content-center mt-4">
-      <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25 me-2"><i class="bi-plus-square"></i></BButton>
-      <BButton class="w-25" variant="primary" @click="rollDice">
-        <i class="bi-dice-5"></i>
-      </BButton>
+    <div id="header">
+      <div v-show="pointer !== null">
+        <BButton @click="goBack">
+          <i class="bi-arrow-left-square"></i>
+        </BButton>
+      </div>
+      <h1 class="title-text text-center">Kanduu</h1>
+      <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
+      <div class="row justify-content-center mt-4">
+        <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25 me-2"><i class="bi-plus-square"></i></BButton>
+        <BButton class="w-25" variant="primary" @click="rollDice">
+          <i class="bi-dice-5"></i>
+        </BButton>
+      </div>
     </div>
     <random-wheel v-if="showCarousel" :pointer=pointer @close="showCarousel=false" @duu="duuItem"></random-wheel>
     <kanduu-list v-else class="mt-5" :pointer=pointer @edit-item="editItem" @open-category="openCategory"></kanduu-list>
@@ -150,4 +152,8 @@ async function getDuuPromptTitle(kanduuId) {
 </template>
 
 <style scoped>
+#header {
+  position: sticky;
+  top: 0;
+}
 </style>

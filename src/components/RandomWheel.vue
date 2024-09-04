@@ -143,11 +143,13 @@ function duu() {
   position: absolute;
   border: 2px solid black;
   font-weight: bold;
-  text-align: center;
   width: 100%;
   height: 100%;
   font-size: 30px;
-  color: white
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .wheel-background-0 {
   background: var(--red-color)
