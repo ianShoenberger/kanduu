@@ -19,4 +19,6 @@ const updateSW = registerSW({
   onOfflineReady() {},
 });
 
-app._instance.props.refreshCallback = updateSW;
+setTimeout(() => {
+  app._instance.props.refreshCallback = updateSW;
+}, 100);
