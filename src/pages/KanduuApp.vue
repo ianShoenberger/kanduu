@@ -101,7 +101,7 @@ async function getDuuPromptTitle(kanduuId) {
           <i class="bi-arrow-left-square"></i>
         </BButton>
       </div>
-      <h1 class="title-text text-center">Kanduu</h1>
+      <h1 class="title-text text-center">Kandey</h1>
       <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
       <div class="row justify-content-center mt-4">
         <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25 me-2"><i class="bi-plus-square"></i></BButton>
