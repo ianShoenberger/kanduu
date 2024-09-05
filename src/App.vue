@@ -1,12 +1,12 @@
 <script setup>
-import { watchEffect, useTemplateRef, onMounted } from 'vue'
+import { watchEffect, useTemplateRef, onMounted, inject } from 'vue'
 
-const { showRefreshPrompt, refreshCallback } = defineProps(['showRefreshPrompt', 'refreshCallback'])
 const modal = useTemplateRef('refreshModal')
-
+const showRefreshPrompt = inject('showRefreshPrompt')
+const refreshCallback = inject('refreshCallback')
 onMounted(() => {
   watchEffect(() => {
-    if (showRefreshPrompt) {
+    if (showRefreshPrompt.value) {
       modal.value.show()
     } else {
       modal.value.hide()
