@@ -1,0 +1,34 @@
+// import 'bootstrap/dist/css/bootstrap.css'
+
+// :root {
+//   --orange-color: #ff7300;
+//   --blue-color: #02b6c7;
+//   --green-color: #81ca01;
+//   --red-color: #cb0328;
+//   --yellow-color: #f2e213;
+// }
+
+$primary: #02b6c7; // set the $primary variable
+$danger: #cb0328;
+$secondary: black;
+
+// set changes
+@import "bootstrap/scss/bootstrap";
+
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+body {
+  font-family: "Poppins" sans-serif;
+}
+
+.btn-primary {
+  // @include button-variant(
+  //   $primary,
+  //   white,
+  //   $hover-background: shade-color($primary, $btn-hover-bg-shade-amount),
+  //   $hover-border: shade-color($primary, $btn-hover-border-shade-amount),
+  //   $active-background: shade-color($primary, $btn-active-bg-shade-amount),
+  //   $active-border: shade-color($primary, $btn-active-border-shade-amount)
+  // ) 
+  // color: white;
+}

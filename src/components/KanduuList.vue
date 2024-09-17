@@ -41,11 +41,25 @@ function onAfterListLeave () {
 </script>
 
 <template>
-  <div>
-    <TransitionGroup name="list" @after-leave="onAfterListLeave">
-      <div v-for="kanduu in currentList" :key="kanduu.id" class="row mb-2">
+  <div id="listWrapper" class="rounded">
+      <b-card-group deck>
+        <b-card>
+          <b-list-group>
+            <TransitionGroup name="list" @after-leave="onAfterListLeave">
+              <b-list-group-item v-for="kanduu in currentList" :key="kanduu.id" class="d-flex justify-content-between align-items-center">
+                <div class="flex-grow-1 d-flex justify-content-center" @click="$emit('openCategory', kanduu.id)">{{ kanduu.name }}</div>
+                <b-dropdown id="dropdown-dropleft" toggle-class="text-decoration-none" variant="light" dropleft no-caret>
+                  <template #button-content><i class="bi bi-three-dots-vertical"></i></template>
+                  <b-dropdown-item @click="$emit('editItem', kanduu.id)">Rename</b-dropdown-item>
+                  <b-dropdown-item @click="deleteKanduu(kanduu.id)">Remove</b-dropdown-item>
+                </b-dropdown>
+              </b-list-group-item>
+            </TransitionGroup>
+          </b-list-group>
+        </b-card>
+      </b-card-group>
+      <!-- <div v-for="kanduu in currentList" :key="kanduu.id" class="row mb-2">
         <div
-          :class="{ completed: kanduu.completed }"
           class="kanduu-name col-8 d-flex justify-content-end"
         >
           <button class="btn btn-secondary" @click="$emit('openCategory', kanduu.id)">
@@ -58,12 +72,21 @@ function onAfterListLeave () {
         <div class="col-2">
           <button class="btn btn-danger" @click="deleteKanduu(kanduu.id)"><i class="bi-x-square"></i></button>
         </div>
-      </div>
-    </TransitionGroup>
+      </div> -->
   </div>
 </template>
 
 <style scoped>
+#listWrapper {
+  border: 1px solid black;
+  padding: 0.5rem;
+}
+.card {
+  border-color: var(--orange-color);
+}
+.list-group-item {
+  border: none;
+}
 .list-enter-active {
   transition: all 0.2s ease-in;
   transition-delay: 0.2s;

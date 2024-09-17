@@ -1,9 +1,9 @@
 import { createApp, ref } from "vue";
 import { createPinia } from "pinia";
-import 'bootstrap/dist/css/bootstrap.css'
+import router from "./router";
+import "./assets/app.scss"
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
-import router from "./router";
 import App from "./App.vue";
 import { registerSW } from 'virtual:pwa-register'
 

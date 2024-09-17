@@ -11,6 +11,7 @@
 - set schedule or recurring tasks?
 - don't transition list after closing the random wheel
 - add radio buttons "category or item" in the add/edit modal
+- make an opacity transition to the background colors on the random wheel when it's cycled through all options and at init
 
 toucan colors:
 orange: ff7300

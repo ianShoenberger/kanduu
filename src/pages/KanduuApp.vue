@@ -101,10 +101,14 @@ async function getDuuPromptTitle(kanduuId) {
           <i class="bi-arrow-left-square"></i>
         </BButton>
       </div>
-      <h1 class="title-text text-center">Kanduu</h1>
+      <div class="d-flex justify-content-center">
+        <div class="title-text">
+          Kanduu
+        </div>
+      </div>
       <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
       <div class="row justify-content-center mt-4">
-        <BButton variant="info" @click="showInputModal = !showInputModal" class="w-25 me-2"><i class="bi-plus-square"></i></BButton>
+        <BButton variant="secondary" @click="showInputModal = !showInputModal" class="w-25 me-2"><i class="bi-plus-square"></i></BButton>
         <BButton class="w-25" variant="primary" @click="rollDice">
           <i class="bi-dice-5"></i>
         </BButton>
@@ -152,6 +156,18 @@ async function getDuuPromptTitle(kanduuId) {
 </template>
 
 <style scoped>
+.title-text {
+  /* color: #d10606; */
+  /* color: var(--blue-color); */
+  color: white;
+  text-shadow: 2px 2px 5px var(--orange-color);
+  font-size: 3rem;
+  border: 2px solid black;
+  border-radius: 25px;
+  background: black;
+  padding: 0px 1.5rem;
+  border: 5px inset #02b6c7;
+}
 #header {
   position: sticky;
   top: 0;
