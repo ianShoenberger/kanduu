@@ -34,9 +34,9 @@ onMounted(() => {
 <style>
 :root {
   --orange-color: #ff7300;
-  /* --blue-color: #02b6c7; */
+  --blue-color: #02b6c7;
   --green-color: #81ca01;
-  /* --red-color: #cb0328; */
+  --red-color: #cb0328;
   --yellow-color: #f2e213;
 }
 #myApp {

@@ -150,6 +150,7 @@ function duu() {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 .wheel-background-0 {
   background: var(--red-color)

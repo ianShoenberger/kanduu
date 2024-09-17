@@ -84,6 +84,10 @@ function onAfterListLeave () {
 .card {
   border-color: var(--orange-color);
 }
+.list-group {
+  max-height: 460px;
+  overflow-y: scroll;
+}
 .list-group-item {
   border: none;
 }
