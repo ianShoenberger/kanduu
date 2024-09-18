@@ -69,7 +69,6 @@ function rollDice() {
 }
 
 async function duuItem(itemId) {
-  await duuKanduu(itemId) // async
   duKanduuId.value = itemId
   duuPromptTitle.value = await getDuuPromptTitle(itemId)
   showDuuPrompt.value = true
@@ -80,7 +79,8 @@ function removeItem() {
   // call store function to set item.show to false
   hideDuuPrompt()
 }
-function hideDuuPrompt() {
+async function hideDuuPrompt(willHideItem) {
+  await duuKanduu(duKanduuId.value, willHideItem)
   showDuuPrompt.value = false
   duKanduuId.value = -1
   duuPromptTitle.value = ''
@@ -113,7 +113,7 @@ async function getDuuPromptTitle(kanduuId) {
       </div>
     </div>
     <random-wheel v-if="showCarousel" :pointer=pointer @close="showCarousel=false" @duu="duuItem"></random-wheel>
-    <kanduu-list v-else class="mt-5" :pointer=pointer @edit-item="editItem" @open-category="openCategory"></kanduu-list>
+    <kanduu-list v-else class="mt-5" :pointer=pointer @edit-item="editItem" @duu="duuItem" @open-category="openCategory"></kanduu-list>
     <BModal 
       id="inputModal"
       title="Edit"
@@ -136,7 +136,7 @@ async function getDuuPromptTitle(kanduuId) {
         <b-button
           variant="secondary"
           size="md"
-          @click="hideDuuPrompt"
+          @click="hideDuuPrompt(false)"
         >
           Keep 
         </b-button>
@@ -144,7 +144,7 @@ async function getDuuPromptTitle(kanduuId) {
           variant="danger"
           size="md"
           class="ms-2"
-          @click="removeItem"
+          @click="hideDuuPrompt(true)"
         >
           Discard
         </b-button>

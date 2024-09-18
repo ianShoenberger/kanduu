@@ -72,10 +72,11 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     const plainKanduu = createPlainKanduu(kanduu);
     await indexedDb.saveKanduu(plainKanduu);
   }
-  async function duuKanduu(itemId) {
+  async function duuKanduu(itemId, hideItem) {
     const kanduu = kanduuList.value.find((obj) => obj.id === itemId);
     if (kanduu) {
       kanduu.datesDone.push(Date.now());
+      kanduu.show = !hideItem
     }
     const plainKanduu = createPlainKanduu(kanduu);
     await indexedDb.saveKanduu(plainKanduu);

@@ -115,6 +115,9 @@ function duu() {
       </div>
     </div>
     <div id="duuButtonContainer" class="d-flex justify-content-center w-100">
+      <BButton id="duuButton" :disabled="isButtonDisabled" size="lg" variant="outline-secondary" @click="rollDice" class="me-3">
+        <span>Spin Again</span>
+      </BButton>
       <BButton id="duuButton" :disabled="isButtonDisabled" size="lg" variant="primary" @click="duu">
         <span>duu this!</span>
       </BButton>

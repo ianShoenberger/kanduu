@@ -9,13 +9,13 @@ const { kanduuList } = storeToRefs(store);
 const { deleteKanduu, getKanduuList } = store;
 
 getKanduuList();
-defineEmits(['editItem', 'openCategory'])
+const emit = defineEmits(['editItem', 'openCategory', 'duu']);
 
 let currentList = ref([])
 let ignoreChange = false
 
 const displayedList = computed(() => {
-  return kanduuList.value.filter((kanduu) => kanduu.parent === props.pointer)
+  return kanduuList.value.filter((kanduu) => kanduu.parent === props.pointer && kanduu.show)
 })
 
 watch(props, (newPointer, oldPointer) => {
@@ -50,6 +50,7 @@ function onAfterListLeave () {
                 <div class="flex-grow-1 d-flex justify-content-center" @click="$emit('openCategory', kanduu.id)">{{ kanduu.name }}</div>
                 <b-dropdown id="dropdown-dropleft" toggle-class="text-decoration-none" variant="light" dropleft no-caret>
                   <template #button-content><i class="bi bi-three-dots-vertical"></i></template>
+                  <b-dropdown-item @click="$emit('duu', kanduu.id)">duu</b-dropdown-item>
                   <b-dropdown-item @click="$emit('editItem', kanduu.id)">Rename</b-dropdown-item>
                   <b-dropdown-item @click="deleteKanduu(kanduu.id)">Remove</b-dropdown-item>
                 </b-dropdown>
