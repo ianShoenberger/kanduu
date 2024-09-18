@@ -20,7 +20,7 @@ export default defineConfig({
         name: 'Kanduu',
         short_name: 'Kanduu',
         description: 'Manage the stuff you like to do',
-        theme_color: '#eb8934',
+        theme_color: '#ff7300',
         icons: [
           {
             src: 'pwa-64x64.png',
