@@ -89,7 +89,9 @@ function onAfterListLeave () {
   overflow-y: scroll;
 }
 .list-group-item {
-  border: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
 }
 .list-enter-active {
   transition: all 0.2s ease-in;

@@ -96,14 +96,12 @@ async function getDuuPromptTitle(kanduuId) {
 <template>
   <div class="container pt-5">
     <div id="header">
-      <div v-show="pointer !== null">
-        <BButton @click="goBack">
-          <i class="bi-arrow-left-square"></i>
-        </BButton>
-      </div>
+      <BButton v-show="pointer !== null" variant="outline-secondary" @click="goBack" class="position-fixed">
+        <i class="bi-arrow-left-square"></i>
+      </BButton>
       <div class="d-flex justify-content-center">
-        <div class="title-text">
-          Kanduu
+        <div class="title-text text-primary">
+          <u>Kanduu</u>
         </div>
       </div>
       <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
@@ -158,15 +156,12 @@ async function getDuuPromptTitle(kanduuId) {
 <style scoped>
 .title-text {
   /* color: #d10606; */
-  /* color: var(--blue-color); */
-  color: white;
-  text-shadow: 2px 2px 5px var(--orange-color);
+  text-shadow: 2px 2px 2px var(--yellow-color);
   font-size: 3rem;
-  border: 2px solid black;
-  border-radius: 25px;
-  background: black;
+  /* border: 2px solid black;
+  border-radius: 25px; */
   padding: 0px 1.5rem;
-  border: 5px inset #02b6c7;
+  /* border-bottom: 1px solid #02b6c7; */
 }
 #header {
   position: sticky;
