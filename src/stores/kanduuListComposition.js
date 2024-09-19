@@ -54,8 +54,8 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     return children;
   }
   // actions
-  async function addKanduu(name, parent = null) {
-    const newKanduu = new KanduuModel(id.value++, name, parent);
+  async function addKanduu(name, isLeaf, parent = null) {
+    const newKanduu = new KanduuModel(id.value++, name, parent, isLeaf);
     kanduuList.value.push(newKanduu);
     await indexedDb.saveKanduu(newKanduu);
     return newKanduu;
@@ -81,10 +81,12 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     const plainKanduu = createPlainKanduu(kanduu);
     await indexedDb.saveKanduu(plainKanduu);
   }
-  async function editName(idToFind, newName) {
+  async function editKanduu(idToFind, newName, isLeaf) {
     const kanduu = kanduuList.value.find((obj) => obj.id === idToFind);
     if (kanduu) {
       kanduu.name = newName;
+      kanduu.isLeaf = isLeaf;
+      kanduu.dateModified = Date.now();
     }
     const plainKanduu = createPlainKanduu(kanduu);
     await indexedDb.saveKanduu(plainKanduu);
@@ -114,7 +116,7 @@ export const useKanduuListStore = defineStore("kanduuList", () => {
     deleteKanduu,
     toggleCompleted,
     duuKanduu,
-    editName,
+    editKanduu,
     addCategoryItem,
   };
 });

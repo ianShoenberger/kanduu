@@ -1,15 +1,18 @@
 <script setup>
 import { ref } from 'vue'
-// import EditModal from "../components/EditModal.vue";
 import KanduuList from "../components/KanduuList.vue";
 import RandomWheel from "../components/RandomWheel.vue";
 import { useKanduuListStore } from "../stores/kanduuListComposition";
 
 const store = useKanduuListStore();
-const { addKanduu, duuKanduu, getKanduu } = store;
+const { addKanduu, duuKanduu, getKanduu, editKanduu } = store;
 
-const newKanduu = ref('')
-const editedKanduuId = ref(-1)
+const editKanduuObj = ref({
+  id: -1,
+  name: '',
+  isLeaf: false,
+
+});
 const showInputModal = ref(false)
 const duKanduuId = ref(-1)
 const showDuuPrompt = ref(false)
@@ -21,25 +24,25 @@ const currentLevelName = ref('')
 const showCarousel = ref(false)
 
 function discardEdits() {
-  newKanduu.value = ''
-  editedKanduuId.value = -1
+  editKanduuObj.value.id = -1;
+  editKanduuObj.value.name = '';
+  editKanduuObj.value.isLeaf = false;
 }
-function saveKanduu(item) {
-  if (item.length === 0) {
+function saveKanduu() {
+  if (editKanduuObj.value.name.length === 0) {
     return;
-  } else if (editedKanduuId.value >= 0) {
-    store.editName(editedKanduuId.value, item)
-    editedKanduuId.value = -1
+  } else if (editKanduuObj.value.id >= 0) {
+    editKanduu(editKanduuObj.value.id, editKanduuObj.value.name, editKanduuObj.value.isLeaf);
   } else {
-    addKanduu(item, pointer.value);
+    addKanduu(editKanduuObj.value.name, editKanduuObj.value.isLeaf, pointer.value);
   }
-  newKanduu.value = ''
-
+  discardEdits();
 }
 async function editItem(kanduuId) {
   const kanduu = await getKanduu(kanduuId);
-  newKanduu.value = kanduu.name
-  editedKanduuId.value = kanduuId
+  editKanduuObj.value.name = kanduu.name;
+  editKanduuObj.value.id = kanduuId
+  editKanduuObj.value.isLeaf = kanduu.isLeaf
   showInputModal.value = true
 }
 
@@ -101,7 +104,14 @@ async function getDuuPromptTitle(kanduuId) {
       </BButton>
       <div class="d-flex justify-content-center">
         <div class="title-text text-primary">
-          <u>Kanduu</u>
+          <u>
+            <span class="k-title">K</span>
+            <span class="a-title">a</span>
+            <span class="n-title">n</span>
+            <span class="d-title">d</span>
+            <span class="u-title">u</span>
+            <span class="u-title">u</span>
+          </u>
         </div>
       </div>
       <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
@@ -119,11 +129,13 @@ async function getDuuPromptTitle(kanduuId) {
       title="Edit"
       hideFooter="false"
       v-model="showInputModal"
-      @ok="saveKanduu(newKanduu)"
+      @ok="saveKanduu"
       @close="discardEdits"
       @cancel="discardEdits"
     >
-      <BFormInput v-model="newKanduu" id="kanduuItem" autofocus :placeholder="inputPlaceholder" />
+      <BFormInput v-model="editKanduuObj.name" id="kanduuItem" autofocus :placeholder="inputPlaceholder" />
+      <b-form-radio v-model="editKanduuObj.isLeaf" name="some-radios" :value="false">Category</b-form-radio>
+      <b-form-radio v-model="editKanduuObj.isLeaf" name="some-radios" :value="true">Item</b-form-radio>
     </BModal>
     <BModal 
       id="duuModal"
@@ -155,13 +167,27 @@ async function getDuuPromptTitle(kanduuId) {
 
 <style scoped>
 .title-text {
-  /* color: #d10606; */
-  text-shadow: 2px 2px 2px var(--yellow-color);
+  text-shadow: 2px 2px 2px var(--orange-color);
   font-size: 3rem;
-  /* border: 2px solid black;
-  border-radius: 25px; */
   padding: 0px 1.5rem;
-  /* border-bottom: 1px solid #02b6c7; */
+}
+.k-title {
+  color: var(--red-color);
+}
+.a-title {
+  color: var(--green-color);
+}
+.n-title {
+  color: var(--yellow-color);
+}
+.d-title {
+  color: var(--orange-color);
+}
+.u-title {
+  color: var(--blue-color);
+}
+.u2-title {
+  color: white;
 }
 #header {
   position: sticky;

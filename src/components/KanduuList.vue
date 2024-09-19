@@ -38,42 +38,46 @@ function onAfterListLeave () {
   currentList.value = displayedList.value
   ignoreChange = false
 }
+
+function getDisplayDate(dates) {
+  let retVal = '';
+  if (dates.length) {
+    const mostRecentDate = new Date(dates[dates.length - 1]);
+    retVal = mostRecentDate.toLocaleDateString();
+  }
+  return retVal;
+}
 </script>
 
 <template>
   <div id="listWrapper" class="rounded">
-      <b-card-group deck>
-        <b-card>
-          <b-list-group>
-            <TransitionGroup name="list" @after-leave="onAfterListLeave">
-              <b-list-group-item v-for="kanduu in currentList" :key="kanduu.id" class="d-flex justify-content-between align-items-center">
-                <div class="flex-grow-1 d-flex justify-content-center" @click="$emit('openCategory', kanduu.id)">{{ kanduu.name }}</div>
-                <b-dropdown id="dropdown-dropleft" toggle-class="text-decoration-none" variant="light" dropleft no-caret>
-                  <template #button-content><i class="bi bi-three-dots-vertical"></i></template>
-                  <b-dropdown-item @click="$emit('duu', kanduu.id)">duu</b-dropdown-item>
-                  <b-dropdown-item @click="$emit('editItem', kanduu.id)">Rename</b-dropdown-item>
-                  <b-dropdown-item @click="deleteKanduu(kanduu.id)">Remove</b-dropdown-item>
-                </b-dropdown>
-              </b-list-group-item>
-            </TransitionGroup>
-          </b-list-group>
-        </b-card>
-      </b-card-group>
-      <!-- <div v-for="kanduu in currentList" :key="kanduu.id" class="row mb-2">
-        <div
-          class="kanduu-name col-8 d-flex justify-content-end"
-        >
-          <button class="btn btn-secondary" @click="$emit('openCategory', kanduu.id)">
-            <span>{{ kanduu.name }}</span>
-          </button>
-        </div>
-        <div class="col-2">
-          <button class="btn btn-info" @click="$emit('editItem', kanduu.id)"><i class="bi-pencil-square"></i></button>
-        </div>
-        <div class="col-2">
-          <button class="btn btn-danger" @click="deleteKanduu(kanduu.id)"><i class="bi-x-square"></i></button>
-        </div>
-      </div> -->
+    <b-card-group deck>
+      <b-card>
+        <b-list-group>
+          <TransitionGroup name="list" @after-leave="onAfterListLeave">
+            <b-list-group-item v-for="kanduu in currentList" :key="kanduu.id" class="d-flex justify-content-between align-items-center">
+              <div class="flex-grow-1 d-flex justify-content-center" @click="$emit('openCategory', kanduu.id)">
+                <div class="w-50">
+                  <i v-if="!kanduu.isLeaf" class="bi bi-folder me-3"></i>
+                  <span class="duu-date">
+                    {{ getDisplayDate(kanduu.datesDone) }}
+                  </span>
+                </div>
+                <div class="w-50">
+                  {{ kanduu.name }}
+                </div>
+              </div>
+              <b-dropdown id="dropdown-dropleft" toggle-class="text-decoration-none" variant="light" dropleft no-caret>
+                <template #button-content><i class="bi bi-three-dots-vertical"></i></template>
+                <b-dropdown-item @click="$emit('duu', kanduu.id)">duu</b-dropdown-item>
+                <b-dropdown-item @click="$emit('editItem', kanduu.id)">edit</b-dropdown-item>
+                <b-dropdown-item @click="deleteKanduu(kanduu.id)">remove</b-dropdown-item>
+              </b-dropdown>
+            </b-list-group-item>
+          </TransitionGroup>
+        </b-list-group>
+      </b-card>
+    </b-card-group>
   </div>
 </template>
 
@@ -84,6 +88,11 @@ function onAfterListLeave () {
 }
 .card {
   border-color: var(--orange-color);
+}
+
+.duu-date {
+  font-size: 0.75rem;
+  opacity: 0.8;
 }
 .list-group {
   max-height: 460px;

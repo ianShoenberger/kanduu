@@ -22,7 +22,7 @@ onMounted(async () => {
   inputPlaceholder.value = `Something about "${category.value.name}"`
 });
 async function addItemAndClear() {
-  await store.addCategoryItem(categoryId, newItem.value);
+  await store.addCategoryItem(categoryId, false, newItem.value);
   itemsSubList.push(newItem.value);
   newItem.value = "";
 }
