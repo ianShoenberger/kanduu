@@ -57,7 +57,7 @@ function onNameClicked(id, isLeaf) {
 
 <template>
   <div id="listWrapper" class="rounded">
-    <b-card-group v-if="currentList.length" deck>
+    <b-card-group deck>
       <b-card>
         <b-list-group>
           <TransitionGroup name="list" @after-leave="onAfterListLeave">
@@ -84,7 +84,7 @@ function onNameClicked(id, isLeaf) {
         </b-list-group>
       </b-card>
     </b-card-group>
-    <div class="text-center" v-else>Looks empty... try adding stuff with the + button</div>
+    <!-- <div class="text-center" v-else>Looks empty... try adding stuff with the + button</div> -->
   </div>
 </template>
 
