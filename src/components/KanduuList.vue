@@ -47,16 +47,22 @@ function getDisplayDate(dates) {
   }
   return retVal;
 }
+
+function onNameClicked(id, isLeaf) {
+  if (!isLeaf) {
+    emit('openCategory', id)
+  }
+}
 </script>
 
 <template>
   <div id="listWrapper" class="rounded">
-    <b-card-group deck>
+    <b-card-group v-if="currentList.length" deck>
       <b-card>
         <b-list-group>
           <TransitionGroup name="list" @after-leave="onAfterListLeave">
             <b-list-group-item v-for="kanduu in currentList" :key="kanduu.id" class="d-flex justify-content-between align-items-center">
-              <div class="flex-grow-1 d-flex justify-content-center" @click="$emit('openCategory', kanduu.id)">
+              <div class="flex-grow-1 d-flex justify-content-center" @click="onNameClicked(kanduu.id, kanduu.isLeaf)">
                 <div class="w-50">
                   <i v-if="!kanduu.isLeaf" class="bi bi-folder me-3"></i>
                   <span class="duu-date">
@@ -69,7 +75,7 @@ function getDisplayDate(dates) {
               </div>
               <b-dropdown id="dropdown-dropleft" toggle-class="text-decoration-none" variant="light" dropleft no-caret>
                 <template #button-content><i class="bi bi-three-dots-vertical"></i></template>
-                <b-dropdown-item @click="$emit('duu', kanduu.id)">duu</b-dropdown-item>
+                <b-dropdown-item @click="$emit('duu', kanduu.id)">duu (do it)</b-dropdown-item>
                 <b-dropdown-item @click="$emit('editItem', kanduu.id)">edit</b-dropdown-item>
                 <b-dropdown-item @click="deleteKanduu(kanduu.id)">remove</b-dropdown-item>
               </b-dropdown>
@@ -78,6 +84,7 @@ function getDisplayDate(dates) {
         </b-list-group>
       </b-card>
     </b-card-group>
+    <div class="text-center" v-else>Looks empty... try adding stuff with the + button</div>
   </div>
 </template>
 
@@ -96,6 +103,7 @@ function getDisplayDate(dates) {
 }
 .list-group {
   max-height: 460px;
+  min-height: 160px;
   overflow-y: scroll;
 }
 .list-group-item {

@@ -167,7 +167,7 @@ async function getDuuPromptTitle(kanduuId) {
 
 <style scoped>
 .title-text {
-  text-shadow: 2px 2px 2px var(--orange-color);
+  text-shadow: 2px 2px 1px var(--orange-color);
   font-size: 3rem;
   padding: 0px 1.5rem;
 }
