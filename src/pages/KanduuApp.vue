@@ -20,7 +20,7 @@ const duuPromptTitle = ref('')
 const originalPlaceholderText = `Try "Movies"`
 const inputPlaceholder = ref(originalPlaceholderText)
 const pointer = ref(null)
-const currentLevelName = ref('')
+const currentLevelName = ref('Welcome')
 const showCarousel = ref(false)
 
 function discardEdits() {
@@ -61,7 +61,7 @@ async function goBack() {
     currentLevelName.value = prevLevel.name
     pointer.value = prevLevel.id;
   } else {
-    currentLevelName.value = ''
+    currentLevelName.value = 'Welcome'
     pointer.value = null
     inputPlaceholder.value = originalPlaceholderText
   }
@@ -114,8 +114,8 @@ async function getDuuPromptTitle(kanduuId) {
           </u>
         </div>
       </div>
-      <h2 v-show="pointer !== null" class="text-center">{{ currentLevelName }}</h2>
-      <div class="row justify-content-center mt-4">
+      <h2 :class="{ 'invisible': pointer === null }" class="text-center">{{ currentLevelName }}</h2>
+      <div class="row justify-content-center mt-3">
         <BButton variant="secondary" @click="showInputModal = !showInputModal" class="w-25 me-2"><i class="bi-plus-square"></i></BButton>
         <BButton class="w-25" variant="primary" @click="rollDice">
           <i class="bi-dice-5"></i>
@@ -123,7 +123,7 @@ async function getDuuPromptTitle(kanduuId) {
       </div>
     </div>
     <random-wheel v-if="showCarousel" :pointer=pointer @close="showCarousel=false" @duu="duuItem"></random-wheel>
-    <kanduu-list v-else class="mt-5" :pointer=pointer @edit-item="editItem" @duu="duuItem" @open-category="openCategory"></kanduu-list>
+    <kanduu-list v-else class="mt-4" :pointer=pointer @edit-item="editItem" @duu="duuItem" @open-category="openCategory"></kanduu-list>
     <BModal 
       id="inputModal"
       title="Edit"
@@ -133,7 +133,7 @@ async function getDuuPromptTitle(kanduuId) {
       @close="discardEdits"
       @cancel="discardEdits"
     >
-      <BFormInput v-model="editKanduuObj.name" id="kanduuItem" autofocus :placeholder="inputPlaceholder" />
+      <BFormInput class="mb-3" v-model="editKanduuObj.name" id="kanduuItem" autofocus :placeholder="inputPlaceholder" />
       <b-form-radio v-model="editKanduuObj.isLeaf" name="some-radios" :value="false">Category</b-form-radio>
       <b-form-radio v-model="editKanduuObj.isLeaf" name="some-radios" :value="true">Item</b-form-radio>
     </BModal>
@@ -192,5 +192,8 @@ async function getDuuPromptTitle(kanduuId) {
 #header {
   position: sticky;
   top: 0;
+}
+.invisible {
+  visibility: hidden;
 }
 </style>

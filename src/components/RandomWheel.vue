@@ -38,6 +38,12 @@ onMounted(async () => {
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
+function resetBackgroundColors() {
+  displayedList.value.forEach((displayedItem) => displayedItem.backgroundColor = 'transparent')
+  setTimeout(() => {
+    displayedList.value.forEach((displayedItem, index) => displayedItem.backgroundColor = getBackgroundColor(index));
+  }, 100);
+}
 function rollDice() {
   if (numberOfCategoryItems.value === 0) {
     return;
@@ -46,9 +52,10 @@ function rollDice() {
   setTimeout(() => {
     if (selectedIndex.value === null || itemsSubList.length === 0) {
       itemsSubList = [...displayedList.value];
+      resetBackgroundColors()
     }
     const randomArrayIndex = getRandomInt(itemsSubList.length);
-    console.log(randomArrayIndex);
+    // console.log(randomArrayIndex);
     const poppedItem = itemsSubList.splice(randomArrayIndex, 1)[0];
     // find in the original array
     selectedIndex.value = displayedList.value.findIndex(categoryItem => categoryItem.id === poppedItem.id)
@@ -108,7 +115,7 @@ function duu() {
           v-for="(carouselItem, index) in displayedList"
           :key="index" 
           class="carousel-cell"
-          :class="getBackgroundColor(index)"
+          :class="carouselItem.backgroundColor"
           :style="{ transform: `rotateX(${getRotateX(index)}deg) translateZ(${zTranslate}px)`}">
             {{ carouselItem.name }}
         </div>
@@ -148,12 +155,14 @@ function duu() {
   font-weight: bold;
   width: 100%;
   height: 100%;
-  font-size: 30px;
+  font-size: 1.2rem;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+  transition: background 1s;
+  background: transparent;
 }
 .wheel-background-0 {
   background: var(--red-color)
@@ -169,6 +178,9 @@ function duu() {
 }
 .wheel-background-4 {
   background: var(--blue-color)
+}
+.background-transparent {
+  background: transparent;
 }
 #backgroundOverlay {
   background: black;

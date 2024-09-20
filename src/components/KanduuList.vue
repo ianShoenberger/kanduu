@@ -12,11 +12,16 @@ getKanduuList();
 const emit = defineEmits(['editItem', 'openCategory', 'duu']);
 
 let currentList = ref([])
+const transitionName = ref('list');
 let ignoreChange = false
 
 const displayedList = computed(() => {
-  return kanduuList.value.filter((kanduu) => kanduu.parent === props.pointer && kanduu.show)
-})
+  const list = kanduuList.value.filter((kanduu) => kanduu.parent === props.pointer && kanduu.show)
+  list.sort((a, b) => {
+    return b.dateModified - a.dateModified;
+  });
+  return list;
+});
 
 watch(props, (newPointer, oldPointer) => {
   // if we have an empty list, we won't trigger the onAfterListLeave which fetches the next list
@@ -60,17 +65,17 @@ function onNameClicked(id, isLeaf) {
     <b-card-group deck>
       <b-card>
         <b-list-group>
-          <TransitionGroup name="list" @after-leave="onAfterListLeave">
+          <TransitionGroup :name="transitionName" @after-leave="onAfterListLeave">
             <b-list-group-item v-for="kanduu in currentList" :key="kanduu.id" class="d-flex justify-content-between align-items-center">
-              <div class="flex-grow-1 d-flex justify-content-center" @click="onNameClicked(kanduu.id, kanduu.isLeaf)">
-                <div class="w-50">
-                  <i v-if="!kanduu.isLeaf" class="bi bi-folder me-3"></i>
-                  <span class="duu-date">
+              <div class="flex-grow-1 d-flex" @click="onNameClicked(kanduu.id, kanduu.isLeaf)">
+                <i v-if="!kanduu.isLeaf" class="bi bi-folder me-3 d-flex align-items-center"></i>
+                <div class="d-flex flex-column">
+                  <div>
+                    {{ kanduu.name }}
+                  </div>
+                  <div class="duu-date">
                     {{ getDisplayDate(kanduu.datesDone) }}
-                  </span>
-                </div>
-                <div class="w-50">
-                  {{ kanduu.name }}
+                  </div>
                 </div>
               </div>
               <b-dropdown id="dropdown-dropleft" toggle-class="text-decoration-none" variant="light" dropleft no-caret>
@@ -103,8 +108,9 @@ function onNameClicked(id, isLeaf) {
 }
 .list-group {
   max-height: 460px;
-  min-height: 160px;
+  min-height: 210px;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 .list-group-item {
   border-top: none;
@@ -124,5 +130,9 @@ function onNameClicked(id, isLeaf) {
 }
 .list-enter-from {
   transform: translateX(200px);
+}
+li {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 </style>
