@@ -134,8 +134,8 @@ async function getDuuPromptTitle(kanduuId) {
       @cancel="discardEdits"
     >
       <BFormInput class="mb-3" v-model="editKanduuObj.name" id="kanduuItem" autofocus :placeholder="inputPlaceholder" />
-      <b-form-radio v-model="editKanduuObj.isLeaf" name="some-radios" :value="false">Category</b-form-radio>
-      <b-form-radio v-model="editKanduuObj.isLeaf" name="some-radios" :value="true">Item</b-form-radio>
+      <b-form-radio v-model="editKanduuObj.isLeaf" name="some-radios" :value="[!pointer ? false : true]">Category</b-form-radio>
+      <b-form-radio v-model="editKanduuObj.isLeaf" name="some-radios" :value="[!pointer ? true : false]">Item</b-form-radio>
     </BModal>
     <BModal 
       id="duuModal"
